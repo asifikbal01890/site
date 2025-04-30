@@ -6,6 +6,7 @@ import { FiEyeOff } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../Providers/AuthProvider";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const Login = () => {
     const { logIn, signUpWithGoogle } = useContext(AuthContext);
@@ -18,6 +19,12 @@ const Login = () => {
         logIn(data.email, data.password)
             .then((result) => {
                 console.log("Login Successful!", result.user);
+                axios.post("http://localhost:4000/jwt", { email: data.email }, { withCredentials: true })
+                    .then((response) => {      
+                        console.log("JWT Token:", response.data.token);
+                        // localStorage.setItem("access-token", response.data.token);
+                    })
+                    
                 Swal.fire({
                     title: "Login Successful!",
                     text: "Welcome back!",
